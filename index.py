@@ -8,6 +8,7 @@ from xlsxwriter import *
 
 from PyQt5.uic import loadUiType
 import datetime
+import database as database_db
 
 ui, _ = loadUiType("library.ui")
 login, _ = loadUiType("login.ui")
@@ -22,8 +23,9 @@ class Login(QWidget, login):
         style = style.read()
         self.setStyleSheet(style)
 
+
     def handel_login(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         username = self.user_name_lineEdit.text()
@@ -50,6 +52,7 @@ class MainApp(QMainWindow, ui):
         self.dark_orange_theme()
         self.handel_ui_changes()
         self.handel_buttons()
+        self.create_database()
 
         self.show_category()
         self.show_author()
@@ -130,6 +133,9 @@ class MainApp(QMainWindow, ui):
     def hiding_themes(self):
         self.themes_groupBox.hide()
 
+    def create_database(self):
+        database_db
+
     # =============================================opening tabs================================================
 
     def open_day_to_day_tab(self):
@@ -156,7 +162,7 @@ class MainApp(QMainWindow, ui):
         today_date = datetime.date.today()
         to_day = today_date + datetime.timedelta(days=days_number)
 
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         self.cur.execute('''
@@ -169,18 +175,18 @@ class MainApp(QMainWindow, ui):
         self.show_all_operations()
 
     def show_all_operations(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         self.cur.execute('''
             SELECT book.book_name ,dayoperations.book_code , clients.client_name ,
             dayoperations.client_national_id , dayoperations.type ,
             dayoperations.date , dayoperations.to_date
-            FROM library.dayoperations 
-            join library.clients 
-            on library.dayoperations.client_national_id = library.clients.client_national_id
-            join library.book 
-            on library.dayoperations.book_code = library.book.book_code
+            FROM library_b.dayoperations 
+            join library_b.clients 
+            on library_b.dayoperations.client_national_id = library_b.clients.client_national_id
+            join library_b.book 
+            on library_b.dayoperations.book_code = library_b.book.book_code
         ''')
         data = self.cur.fetchall()
 
@@ -197,7 +203,7 @@ class MainApp(QMainWindow, ui):
     # ============================================= books ================================================
 
     def show_all_books(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         self.cur.execute(
@@ -216,7 +222,7 @@ class MainApp(QMainWindow, ui):
         self.db.close()
 
     def add_new_book(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         book_title = self.bookTitle_lineEdit.text()
@@ -246,7 +252,7 @@ class MainApp(QMainWindow, ui):
 
     def search_books(self):
         if self.bookTitle_lineEdit_search_Edit.text():
-            self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+            self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
             self.cur = self.db.cursor()
 
             book_title = self.bookTitle_lineEdit_search_Edit.text()
@@ -266,7 +272,7 @@ class MainApp(QMainWindow, ui):
             self.message_box('Enter A Book Name For Editing!')
 
     def edit_books(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         book_title = self.bookTitle_lineEdit_Edit.text()
@@ -293,7 +299,7 @@ class MainApp(QMainWindow, ui):
         self.bookTitle_lineEdit_search_Edit.setText(book_title)
 
     def delete_books(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         book_title = self.bookTitle_lineEdit_Edit.text()
@@ -318,7 +324,7 @@ class MainApp(QMainWindow, ui):
 
     # ============================================= client ===============================================
     def add_new_client(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         client_name = self.client_name_lineEdit.text()
@@ -335,7 +341,7 @@ class MainApp(QMainWindow, ui):
         self.show_all_client()
 
     def show_all_client(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         self.cur.execute('''SELECT client_name,client_email,client_national_id FROM clients''')
@@ -353,7 +359,7 @@ class MainApp(QMainWindow, ui):
         self.db.close()
 
     def search_client(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         client_national_id = self.client_national_id_edit_search_lineEdit.text()
@@ -367,7 +373,7 @@ class MainApp(QMainWindow, ui):
         self.client_national_id_edit_lineEdit.setText(data[3])
 
     def edit_client(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         client_original_national_id = self.client_national_id_edit_search_lineEdit.text()
@@ -386,7 +392,7 @@ class MainApp(QMainWindow, ui):
         self.show_all_client()
 
     def delete_client(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         client_original_national_id = self.client_national_id_edit_search_lineEdit.text()
@@ -409,7 +415,7 @@ class MainApp(QMainWindow, ui):
     # ============================================= users ================================================
 
     def add_new_user(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         user_name = self.username_lineEdit.text()
@@ -428,7 +434,7 @@ class MainApp(QMainWindow, ui):
             self.wrong_password_label.setText('The Passwords Are Not Match!')
 
     def login(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         user_name = self.username_lineEdit_edit_login.text()
@@ -445,8 +451,6 @@ class MainApp(QMainWindow, ui):
                 self.username_lineEdit_edit.setText(row[1])
                 self.email_lineEdit_edit.setText(row[2])
                 self.password_lineEdit_edit.setText(row[3])
-            else:
-                self.message_box('Invalid Information!!')
 
     def edit_user(self):
         username = self.username_lineEdit_edit.text()
@@ -455,7 +459,7 @@ class MainApp(QMainWindow, ui):
         confirm_password = self.passwordConfig_lineEdit_edit.text()
 
         if password == confirm_password:
-            self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+            self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
             self.cur = self.db.cursor()
 
             original_name = self.username_lineEdit_edit_login.text()
@@ -475,7 +479,7 @@ class MainApp(QMainWindow, ui):
 
     # ============================================= settings ================================================
     def add_category(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         category_name = self.new_category_lineEdit.text()
@@ -489,7 +493,7 @@ class MainApp(QMainWindow, ui):
         self.show_categorise_combo()
 
     def show_category(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         self.cur.execute('''SELECT category_name FROM category''')
@@ -507,7 +511,7 @@ class MainApp(QMainWindow, ui):
                 self.tableWidget_2.insertRow(row_position)
 
     def add_author(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         author_name = self.new_author_lineEdit.text()
@@ -521,7 +525,7 @@ class MainApp(QMainWindow, ui):
         self.show_authors_combo()
 
     def show_author(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         self.cur.execute('''SELECT author_name FROM authors''')
@@ -539,7 +543,7 @@ class MainApp(QMainWindow, ui):
                 self.tableWidget_3.insertRow(row_position)
 
     def add_publisher(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         publisher_name = self.new_publisher_lineEdit.text()
@@ -553,7 +557,7 @@ class MainApp(QMainWindow, ui):
         self.show_publishers_combo()
 
     def show_publisher(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         self.cur.execute('''SELECT publisher_name FROM publisher''')
@@ -572,7 +576,7 @@ class MainApp(QMainWindow, ui):
 
     # ============================================= show settings data in UI ==========================================
     def show_categorise_combo(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         self.cur.execute('''SELECT category_name FROM category''')
@@ -584,7 +588,7 @@ class MainApp(QMainWindow, ui):
             self.category_comboBox_Edit.addItem(category[0])
 
     def show_authors_combo(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         self.cur.execute('''SELECT author_name FROM authors''')
@@ -596,7 +600,7 @@ class MainApp(QMainWindow, ui):
             self.author_comboBox_Edit.addItem(author[0])
 
     def show_publishers_combo(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         self.cur.execute('''SELECT publisher_name FROM publisher''')
@@ -609,7 +613,7 @@ class MainApp(QMainWindow, ui):
 
     # ============================================= Export Data ========================================
     def export_day_operations(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         self.cur.execute('''
@@ -646,7 +650,7 @@ class MainApp(QMainWindow, ui):
         self.message_box('Record Created Successfully')
 
     def export_books(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         self.cur.execute(
@@ -676,7 +680,7 @@ class MainApp(QMainWindow, ui):
         self.message_box('Record Created Successfully')
 
     def export_clients(self):
-        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library')
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
         self.cur = self.db.cursor()
 
         self.cur.execute('''SELECT client_name,client_email,client_national_id FROM clients''')
