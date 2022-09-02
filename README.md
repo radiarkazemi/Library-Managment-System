@@ -1,6 +1,6 @@
 # Library-Managment-System
 
-## This a project based on Python and PyQt5 Library and It is an Labrary Management System.  
+## This a project based on Python and PyQt5 Library and It is an Library Management System.  
 This project has 5 section:    
 
 1 - Day to Day Operation  
