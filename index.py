@@ -19,10 +19,29 @@ class Login(QWidget, login):
         QWidget.__init__(self)
         self.setupUi(self)
         self.login_pushButton.clicked.connect(self.handel_login)
+        self.signup_pushButton.clicked.connect(self.add_new_user)
         style = open('themes/dark_orange.css', 'r')
         style = style.read()
         self.setStyleSheet(style)
 
+    def add_new_user(self):
+        self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
+        self.cur = self.db.cursor()
+
+        user_name = self.username_signup_lineEdit.text()
+        email = self.email_signup_lineEdit.text()
+        password = self.password_signup_lineEdit.text()
+        confirm_password = self.password_confirm_signup_lineEdit.text()
+
+        if password == confirm_password:
+            self.cur.execute('''
+                INSERT INTO users(user_name , user_email , user_password)
+                VALUES (%s , %s , %s)
+            ''', (user_name, email, password))
+            self.db.commit()
+            MainApp.message_box(self, 'User Added!')
+        else:
+            self.wrong_password_label.setText('The Passwords Are Not Match!')
 
     def handel_login(self):
         self.db = mysql.connector.connect(host='localhost', user='root', password='@615$011m9841k@', db='library_b')
